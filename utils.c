@@ -129,3 +129,9 @@ void getInput(char input[])
     printf("type in the message : ");
     scanf("%s",input);
 }
+
+
+void cleanBuffer(char buffer[])
+{
+    memset(buffer, 0, bufferSize);
+}

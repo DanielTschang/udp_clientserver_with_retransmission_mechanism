@@ -10,5 +10,6 @@ void errorHandler(char*, e_ErrorType);
 char* getIpAddress(int, char**);
 int getPort(int, char**);
 void getInput(char input[]);
+void cleanBuffer(char []);
 
 #endif //UDP_SERVER_UTILS_H

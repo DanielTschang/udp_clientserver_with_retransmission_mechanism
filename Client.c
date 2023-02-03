@@ -9,7 +9,8 @@
 
 #include "utils.h"
 
-extern int bufferSize; // get the buffer size of utils.c
+extern int bufferSize;
+
 int getIsLowerThanMaxRetry(); // check if the sending times is still lower than max re-try times.
 float getNewWaitInterval(int,float ,float, float); // get the new wait intervals in seconds.
 int getSecondsOfFloatSeconds(float); //get the number of seconds.
@@ -47,7 +48,7 @@ int main(int argc, char **argv)
     IPaddress.sin_addr.s_addr = inet_addr(SocketIPAddress);
     IPaddress.sin_family = AF_INET;
 
-    bzero(SendingBuffer, bufferSize);
+    cleanBuffer(SendingBuffer);
     char input[bufferSize];
     getInput(input);
     strcpy(SendingBuffer, input);
@@ -67,36 +68,38 @@ int main(int argc, char **argv)
     while(isReceived < 0 && lowerThanMaxRetry){
         isSent = sendto(SocketFD, SendingBuffer, bufferSize, 0, (struct sockaddr*) &IPaddress, sizeof(IPaddress));
         SentTimes++;
-        if(isSent < 0){
+        if( isSent < 0 )  //failed
+        {
             handleFailed(SentTimes, &lowerThanMaxRetry, &timeout, SocketFD);
             continue;
         }
-        printf("[+]Data sent : %s\n", SendingBuffer);
+        printf("[+]Message sent : %s\n", SendingBuffer);
 
-        bzero(ReceivingBuffer, bufferSize);
+        cleanBuffer(ReceivingBuffer);
+
         addressSize = sizeof(IPaddress);
         isReceived = recvfrom(SocketFD, ReceivingBuffer, bufferSize, 0, (struct sockaddr*)&IPaddress, &addressSize);
 
-        // < 0 means it's failed.
-        if( isReceived < 0 )
+
+        if( isReceived < 0 )  //failed
         {
             handleFailed(SentTimes, &lowerThanMaxRetry, &timeout, SocketFD);
             continue;
         }
         else{
-            printf("[+]Data received: %s\n", ReceivingBuffer);
+            printf("[+]Message received: %s\n", ReceivingBuffer);
         }
 
     }
-
+//    close(SocketFD);
     if(isReceived < 0)
     {
         printf("[-]Message sending exceeded the maximum re-try times!\n");
         exit(1);
     }
+    printf("[+]Message sent successfully!\n");
     exit(0);
 
-//    close(SocketFD);
     return 0;
 }
 
@@ -162,3 +165,4 @@ void handleFailed(const int SentTimes, int *lowerThanMaxRetry ,struct timeval *t
 
     *lowerThanMaxRetry = getIsLowerThanMaxRetry(); // Check if it is still lower than Max re-try times
 }
+

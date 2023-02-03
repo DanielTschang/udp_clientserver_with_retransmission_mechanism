@@ -53,16 +53,18 @@ int main(int argc, char **argv)
         errorHandler(argv[0], error);
     }
 
-    bzero(buffer, bufferSize);
+    cleanBuffer(buffer);
+
     addressSize = sizeof(clientAddress);
     //receive the datagram
     int index;
     index = recvfrom(SocketFD, buffer, sizeof(buffer),
                  0, (struct sockaddr*)&clientAddress, &addressSize); //receive message from server
     buffer[index] = '\n';
-    printf("[+]Data received : %s", buffer);
+    printf("[+]Message received : %s\n", buffer);
 
     sendto(SocketFD, buffer, 1024, 0,(struct sockaddr*)&clientAddress, sizeof(clientAddress));
+    printf("[+]Message sent back : %s\n", buffer);
 
 //    close(SocketFD);
     return 0;
