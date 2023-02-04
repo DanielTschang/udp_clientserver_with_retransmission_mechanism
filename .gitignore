@@ -14,3 +14,5 @@ _deps
 .idea/
 Client
 Server
+Server_test
+Client_test
