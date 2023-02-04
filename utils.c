@@ -93,19 +93,10 @@ void errorHandler(char* fileName, e_ErrorType e)
 
 char* getIpAddress(int argc, char** argv)
 {
-    if(argc <= 2 || argc == 5){
+    if(argc <= 2 || argc == 6){
         return "127.0.0.1"; //localhost
     }
-    if(argc == 3){
-        if(validateIP(argv[2])){
-            return argv[2];
-        }
-        else{
-            e_ErrorType error = IP;
-            errorHandler(argv[0], error);
-        }
-    }
-    if(argc == 6){
+    if(argc == 3 || argc == 7){
         if(validateIP(argv[2])){
             return argv[2];
         }

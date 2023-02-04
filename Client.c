@@ -24,10 +24,10 @@ static char* fileName;
 static double multiplier = 2.f;
 static double baseWaitInterval = 0.5;
 static double maxWaitInterval = 8;
+static int maxTry = 10;
 
 int main(int argc, char **argv)
 {
-    fileName = argv[0];
     configurationHandler(argc, argv);
 
     char *SocketIPAddress;
@@ -35,7 +35,7 @@ int main(int argc, char **argv)
     SocketPort = getPort(argc, argv);
     SocketIPAddress = getIpAddress(argc, argv);
 
-    printf("--------------------------------\n");
+    printf("--------------------------------------------------\n");
     printf("UDP Client is running\n");
     printf("The configurations : \n");
     printf("\tThe IP address is %s\n", SocketIPAddress);
@@ -43,7 +43,8 @@ int main(int argc, char **argv)
     printf("\tThe multiplier is %f\n", multiplier);
     printf("\tThe baseWaitInterval is %f\n", baseWaitInterval);
     printf("\tThe maxWaitInterval is %f\n", maxWaitInterval);
-    printf("--------------------------------\n");
+    printf("\tThe maxTry is %d\n", maxTry);
+    printf("--------------------------------------------------\n");
 
     struct sockaddr_in IPaddress;
 
@@ -116,20 +117,23 @@ int main(int argc, char **argv)
 
 void configurationHandler(const int argc, char** argv)
 {
-    if(argc > 6 || argc == 4 )
+    fileName = argv[0];
+    if(argc > 7 || argc == 4 )
     {
         e_ErrorType error = Input;
         errorHandler(fileName, error);
     }
-    if(argc == 5){
+    if(argc == 6){
         multiplier = atof(argv[2]);
         baseWaitInterval = atof(argv[3]);
         maxWaitInterval = atof(argv[4]);
+        maxTry = atof(argv[5]);
     }
-    if(argc == 6){
+    if(argc == 7){
         multiplier = atof(argv[3]);
         baseWaitInterval = atof(argv[4]);
         maxWaitInterval = atof(argv[5]);
+        maxTry = atof(argv[6]);
     }
 
 }
@@ -138,7 +142,7 @@ void configurationHandler(const int argc, char** argv)
 int getIsLowerThanMaxRetry()
 {
     static int times = 0;
-    if(times >= 10) return 0;
+    if(times >= maxTry) return 0;
     times++;
     return 1;
 }
