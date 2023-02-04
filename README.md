@@ -1,8 +1,8 @@
 # udp_clientserver_with_retransmission_mechanism
 
 ## Environment
-- Debian 10
-- gcc
+- Debian 10.13
+- gcc version 8.3.0 (Debian 8.3.0-6)
 
 ## Default configurations
 ```c
@@ -21,16 +21,16 @@ port = 5000;
 
 ## Build
 ```c
-gcc Clinet.c utils.c -o Client
+gcc Clinet.c utils.c -o Client -lm
 gcc Server.c utils.c -o Server
 ```
 
 ## Run
 #### Client
 ```c
-./Client <port> <ip address> <multiplier> <baseWaitInterval> <maxWaitInterval>
+./Client <port> <ip address> <multiplier> <baseWaitInterval> <maxWaitInterval> <maxTry>
 or
-./Client <port> <multiplier> <baseWaitInterval> <maxWaitInterval>
+./Client <port> <multiplier> <baseWaitInterval> <maxWaitInterval> <maxTry>
 or
 ./Client <port> <ip address> //default 127.0.0.1
 or
