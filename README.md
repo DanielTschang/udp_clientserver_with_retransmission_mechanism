@@ -4,17 +4,6 @@
 - Debian 10.13
 - gcc version 8.3.0 (Debian 8.3.0-6)
 
-## Default configurations
-```c
-multiplier = 2.0;
-base wait interval = 0.5;
-max wait interval = 8.0;
-max re-try : 10;
-ip address = 127.0.0.1;
-port = 5000;
-```
-- These can be change by ```char** argv```.
-
 ## Assumption
 - I assume the re-try mechanism:
   - If a message is sent, but the client didn't get a response within a timeout time, The client increase the timeout interval by exponential backoff algorithm.
@@ -39,6 +28,17 @@ port = 5000;
 gcc Clinet.c utils.c -o Client -lm
 gcc Server.c utils.c -o Server
 ```
+
+## Default configurations
+```c
+multiplier = 2.0;
+base wait interval = 0.5;
+max wait interval = 8.0;
+max re-try : 10;
+ip address = 127.0.0.1;
+port = 5000;
+```
+- These can be change by ```char** argv```.
 
 ## Run
 #### Client
