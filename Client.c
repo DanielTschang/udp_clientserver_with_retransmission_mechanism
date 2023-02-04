@@ -26,7 +26,7 @@ static double baseWaitInterval = 0.5;
 static double maxWaitInterval = 8;
 static int maxTry = 10;
 
-int main(int argc, char **argv)
+void main(int argc, char **argv)
 {
     configurationHandler(argc, argv);
 
@@ -110,8 +110,7 @@ int main(int argc, char **argv)
     }
     printf("[+]Message sent successfully!\n");
     exit(0);
-
-    return 0;
+    
 }
 
 void configurationHandler(const int argc, char** argv)

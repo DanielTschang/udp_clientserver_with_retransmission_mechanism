@@ -10,7 +10,7 @@
 
 extern int bufferSize;
 
-int main(int argc, char **argv)
+void main(int argc, char **argv)
 {
     char *ServerIpAddress;
     int ServerPort;
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     printf("[+]Message sent back : %s\n", buffer);
 
 //    close(SocketFD);
-    return 0;
+    exit(0);
 }
 
 
