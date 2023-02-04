@@ -32,7 +32,7 @@ gcc Server.c utils.c -o Server
 or
 ./Client <port> <multiplier> <baseWaitInterval> <maxWaitInterval> <maxTry>
 or
-./Client <port> <ip address> //default 127.0.0.1
+./Client <port> <ip address>
 or
 ./Client <port> 
 or
