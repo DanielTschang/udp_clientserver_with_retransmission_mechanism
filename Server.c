@@ -1,5 +1,3 @@
-//#include "Server.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,12 +12,6 @@ extern int bufferSize;
 
 int main(int argc, char **argv)
 {
-    if(argc < 2 || argc > 3)
-    {
-        e_ErrorType error = Input;
-        errorHandler(argv[0], error);
-    }
-
     char *ServerIpAddress;
     int ServerPort;
     ServerPort = getPort(argc, argv);
@@ -27,8 +19,9 @@ int main(int argc, char **argv)
 
     printf("--------------------------------\n");
     printf("UDP Server is running\n");
-    printf("The ip address is %s\n", ServerIpAddress);
-    printf("The port is %d\n", ServerPort);
+    printf("The configurations : \n");
+    printf("\tThe ip address is %s\n", ServerIpAddress);
+    printf("\tThe port is %d\n", ServerPort);
     printf("--------------------------------\n");
 
     struct sockaddr_in serverAddress, clientAddress;

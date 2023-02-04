@@ -12,28 +12,38 @@
 extern int bufferSize;
 
 int getIsLowerThanMaxRetry(); // check if the sending times is still lower than max re-try times.
-float getNewWaitInterval(int,float ,float, float); // get the new wait intervals in seconds.
+float getNewWaitInterval(int); // get the new wait intervals in seconds.
 int getSecondsOfFloatSeconds(float); //get the number of seconds.
 int getMicroSecondsOfFloatSeconds(float); // get the number of microseconds.
 void setTimeout(struct timeval*, int , int ); // set the time interval
 void setSocketOption(int*, struct timeval*); // set the option of socket.
 void handleFailed(const int , int * ,struct timeval *, int ); //handle when sending is failed.
+void configurationHandler(const int, char**);
 
 static char* fileName;
+static double multiplier = 2.f;
+static double baseWaitInterval = 0.5;
+static double maxWaitInterval = 8;
 
 int main(int argc, char **argv)
 {
     fileName = argv[0];
-    if(argc < 2 || argc > 3)
-    {
-        e_ErrorType error = Input;
-        errorHandler(fileName, error);
-    }
+    configurationHandler(argc, argv);
 
     char *SocketIPAddress;
     int SocketPort;
     SocketPort = getPort(argc, argv);
     SocketIPAddress = getIpAddress(argc, argv);
+
+    printf("--------------------------------\n");
+    printf("UDP Client is running\n");
+    printf("The configurations : \n");
+    printf("\tThe IP address is %s\n", SocketIPAddress);
+    printf("\tThe Port is %d\n", SocketPort);
+    printf("\tThe multiplier is %f\n", multiplier);
+    printf("\tThe baseWaitInterval is %f\n", baseWaitInterval);
+    printf("\tThe maxWaitInterval is %f\n", maxWaitInterval);
+    printf("--------------------------------\n");
 
     struct sockaddr_in IPaddress;
 
@@ -41,6 +51,8 @@ int main(int argc, char **argv)
     char ReceivingBuffer[bufferSize];
 
     socklen_t addressSize;
+    addressSize = sizeof(IPaddress);
+
     int SocketFD;
     //Declare the socket
     SocketFD = socket(AF_INET, SOCK_DGRAM, 0);
@@ -66,7 +78,7 @@ int main(int argc, char **argv)
 
     int SentTimes = 0;
     while(isReceived < 0 && lowerThanMaxRetry){
-        isSent = sendto(SocketFD, SendingBuffer, bufferSize, 0, (struct sockaddr*) &IPaddress, sizeof(IPaddress));
+        isSent = sendto(SocketFD, SendingBuffer, bufferSize, 0, (struct sockaddr*) &IPaddress, addressSize);
         SentTimes++;
         if( isSent < 0 )  //failed
         {
@@ -77,7 +89,6 @@ int main(int argc, char **argv)
 
         cleanBuffer(ReceivingBuffer);
 
-        addressSize = sizeof(IPaddress);
         isReceived = recvfrom(SocketFD, ReceivingBuffer, bufferSize, 0, (struct sockaddr*)&IPaddress, &addressSize);
 
 
@@ -103,6 +114,27 @@ int main(int argc, char **argv)
     return 0;
 }
 
+void configurationHandler(const int argc, char** argv)
+{
+    if(argc > 6 || argc == 4 )
+    {
+        e_ErrorType error = Input;
+        errorHandler(fileName, error);
+    }
+    if(argc == 5){
+        multiplier = atof(argv[2]);
+        baseWaitInterval = atof(argv[3]);
+        maxWaitInterval = atof(argv[4]);
+    }
+    if(argc == 6){
+        multiplier = atof(argv[3]);
+        baseWaitInterval = atof(argv[4]);
+        maxWaitInterval = atof(argv[5]);
+    }
+
+}
+
+
 int getIsLowerThanMaxRetry()
 {
     static int times = 0;
@@ -111,9 +143,9 @@ int getIsLowerThanMaxRetry()
     return 1;
 }
 
-float getNewWaitInterval(int n, float baseInterval, float multiplier, float maxWaitInterval )
+float getNewWaitInterval(int n)
 {
-    float waitInterval = baseInterval * pow(multiplier,n-1);
+    float waitInterval = baseWaitInterval * pow(multiplier,n-1);
     if(waitInterval > maxWaitInterval) return maxWaitInterval;
     return waitInterval;
 }
@@ -152,10 +184,7 @@ void setSocketOption(int *SocketFD, struct timeval* timeout)
 
 void handleFailed(const int SentTimes, int *lowerThanMaxRetry ,struct timeval *timeout, int SocketFD)
 {
-    float multiplier = 2.f;
-    float baseWaitInterval = 0.5;
-    int maxWaitInterval = 8;
-    float newInterval = getNewWaitInterval(SentTimes, baseWaitInterval, multiplier, maxWaitInterval);
+    float newInterval = getNewWaitInterval(SentTimes);
     int Seconds = getSecondsOfFloatSeconds(newInterval);
     int microSeconds = getMicroSecondsOfFloatSeconds(newInterval);
 

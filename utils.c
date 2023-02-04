@@ -1,10 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #include <ctype.h>
 
 #include "utils.h"
@@ -97,7 +93,7 @@ void errorHandler(char* fileName, e_ErrorType e)
 
 char* getIpAddress(int argc, char** argv)
 {
-    if(argc == 2){
+    if(argc <= 2 || argc == 5){
         return "127.0.0.1"; //localhost
     }
     if(argc == 3){
@@ -109,11 +105,21 @@ char* getIpAddress(int argc, char** argv)
             errorHandler(argv[0], error);
         }
     }
-    return "";
+    if(argc == 6){
+        if(validateIP(argv[2])){
+            return argv[2];
+        }
+        else{
+            e_ErrorType error = IP;
+            errorHandler(argv[0], error);
+        }
+    }
+    return "127.0.0.1";
 }
 
 int getPort(int argc, char** argv)
 {
+    if(argc == 1) return 5000;
     if(validatePort(argv[1]))
     {
         return StringToInteger(argv[1]);
