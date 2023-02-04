@@ -38,7 +38,7 @@ max re-try : 10;
 ip address = 127.0.0.1;
 port = 5000;
 ```
-- These can be change by ```char** argv```.
+- These can be changed by ```char** argv```.
 
 ## Run
 #### Client
