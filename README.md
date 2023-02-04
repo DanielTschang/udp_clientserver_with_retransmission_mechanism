@@ -9,6 +9,7 @@
 multiplier = 2.0;
 base wait interval = 0.5;
 max wait interval = 8.0;
+max re-try : 10;
 ip address = 127.0.0.1;
 port = 5000;
 ```
