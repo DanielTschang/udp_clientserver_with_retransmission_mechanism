@@ -123,8 +123,17 @@ int getPort(int argc, char** argv)
 
 void getInput(char input[])
 {
+    char ch;
     printf("type in the message : ");
-    scanf("%s",input);
+    int i = 0;
+    ch = getchar();
+    while(ch!='\n')
+    {
+        input[i] = ch;
+        i++;
+        ch = getchar();
+    }
+    input[i] ='\0';
 }
 
 
