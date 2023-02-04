@@ -92,7 +92,6 @@ int main(int argc, char **argv)
 
         isReceived = recvfrom(SocketFD, ReceivingBuffer, bufferSize, 0, (struct sockaddr*)&IPaddress, &addressSize);
 
-
         if( isReceived < 0 )  //failed
         {
             handleFailed(SentTimes, &lowerThanMaxRetry, &timeout, SocketFD);
@@ -104,7 +103,7 @@ int main(int argc, char **argv)
 
     }
 //    close(SocketFD);
-    if(isReceived < 0)
+    if(isReceived < 0 )
     {
         printf("[-]Message sending exceeded the maximum re-try times!\n");
         exit(1);
@@ -194,7 +193,7 @@ void handleFailed(const int SentTimes, int *lowerThanMaxRetry ,struct timeval *t
 
     setTimeout(timeout, Seconds, microSeconds);
     setSocketOption(&SocketFD, timeout);
-    printf("[-]Message sending Failed!, Resending it after %f Seconds...\n", newInterval);
+    printf("[-]Message sending Failed!, Timeout interval increase to %f\n", newInterval);
 
     *lowerThanMaxRetry = getIsLowerThanMaxRetry(); // Check if it is still lower than Max re-try times
 }
