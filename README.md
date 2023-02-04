@@ -34,7 +34,7 @@ or
 or
 ./Client <port> <ip address> //default 127.0.0.1
 or
-./Client <port> //default 127.0.0.1
+./Client <port> 
 or
 ./Client 
 ```
@@ -43,6 +43,8 @@ or
 ```c
 ./Server <port> <ip adadress>
 or
-./Server <port> //default 127.0.0.1
+./Server <port>
+or
+./Server
 ```
 
